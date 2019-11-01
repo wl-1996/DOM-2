@@ -37,3 +37,16 @@ x2.parent().print();
 
 //获取儿子:
 x2.children().print();
+
+//window.jQuery = window.$ ,这样可以简化代码;以后获取元素可以直接$('.test')，而不用jQuery('.test')
+
+//创建元素：
+const $div = $("<div><span>1</span></div>");
+$div.print();
+// 把创建的元素追加到页面里：
+$div.appendTo(document.body);
+// 把jquery对象追加到另一个jquery对象里：
+//
+
+// append方法：
+$("body").append($(".child"));

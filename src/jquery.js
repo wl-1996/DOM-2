@@ -1,14 +1,64 @@
-window.jQuery = function(selectorOrArray) {
+// window.$ = window.jQuery.简化代码
+window.$ = window.jQuery = function(selectorOrArrayOrTemplate) {
   let elements; //变量作用域提升，因为在if里声明的话就只能作用在if内部了
-  if (typeof selectorOrArray === "string") {
-    //elements是一个数组，包含获取到的所有selector元素
-    elements = document.querySelectorAll(selectorOrArray);
-    //jQuery获取元素selector,但是并不能返回这个元素，只能返回一个对象，通过对象里的函数（方法）可以操控这个元素
-  } else if (selectorOrArray instanceof Array) {
-    elements = selectorOrArray;
+  if (typeof selectorOrArrayOrTemplate === "string") {
+    if (selectorOrArrayOrTemplate[0] === "<") {
+      //创建div：
+      elements = [createElement(selectorOrArrayOrTemplate)];
+    } else {
+      //查找div：
+      //elements是一个数组，包含获取到的所有selector元素
+      elements = document.querySelectorAll(selectorOrArrayOrTemplate);
+    }
+  } else if (selectorOrArrayOrTemplate instanceof Array) {
+    elements = selectorOrArrayOrTemplate;
   }
+
+  function createElement(string) {
+    const container = document.createElement("template");
+    container.innerHTML = string.trim();
+    return container.content.firstChild;
+  }
+
+  //jQuery获取元素selectorOrArrayOrTemplate,但是并不能返回这个元素，只能返回一个对象，通过对象里的函数（方法）可以操控这个元素
   //下边是jQuery返回的对象，对象里有属性addClass等,这些属性是方法（即函数）
   return {
+    jquery: true,
+    elements: elements,
+    // 获取到新创建的元素：
+    get(index) {
+      return elements[index];
+    },
+    // 把新创建的元素放到页面里1：
+    appendTo(node) {
+      if (node instanceof Element) {
+        // 遍历 elements，对每个 el 进行 node.appendChild 操作
+        this.each(el => node.appendChild(el));
+      } else if (node.jquery === true) {
+        // 遍历 elements，对每个 el 进行 node.get(0).appendChild(el))  操作
+        this.each(el => node.get(0).appendChild(el));
+      }
+    },
+    // 把元素放到页面里2：
+    append(children) {
+      // 如果children是一个元素
+      if (children instanceof Element) {
+        // 就获取到当前api的第0个插入children：
+        this.get(0).appendChild(children);
+      }
+      // 如果children是多个元素：
+      else if (children instanceof HTMLCollection) {
+        //遍历children：
+        for (let i = 0; i < children.length; i++) {
+          // 把children的第i项放到当前api的第一个元素里：
+          this.get(0).appendChild(children[i]);
+        }
+      }
+      // 如果children是一个jquery对象：
+      else if (children.jquery === true) {
+        children.each(node => this.get(0).appendChild(node));
+      }
+    },
     //在一个div里找一个元素
     find(selector) {
       let array = [];
@@ -52,7 +102,7 @@ window.jQuery = function(selectorOrArray) {
     children() {
       const array = [];
       this.each(node => {
-        //...node.children的意思是把这个数组拆开，因为node.child得到的也是一个数组
+        //...node.children的意思是把这个数组拆开，因为node.child得到的是一个有结构的数组
         array.push(...node.children);
       });
       return jQuery(array);
@@ -72,7 +122,7 @@ window.jQuery = function(selectorOrArray) {
       //用到的知识：如果一个对象调用一个函数（方法），那么函数（又称方法）里的this就是这个对象；
       //函数（方法）可以通过this访问调用这个函数（方法）的对象。
     },
-    oldApi: selectorOrArray.oldApi,
+    oldApi: selectorOrArrayOrTemplate.oldApi,
     //结束当前api，返回上一个api
     end() {
       return this.oldApi; //this就是当前的api//api2

@@ -149,8 +149,18 @@ x.each(function (div) {
 var x2 = jQuery(".test");
 x2.parent().print(); //获取儿子:
 
-x2.children().print();
-},{}],"../../../../../AppData/Local/Yarn/Data/global/node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+x2.children().print(); //window.jQuery = window.$ ,这样可以简化代码;以后获取元素可以直接$('.test')，而不用jQuery('.test')
+//创建元素：
+
+var $div = $("<div><span>1</span></div>");
+$div.print(); // 把创建的元素追加到页面里：
+
+$div.appendTo(document.body); // 把jquery对象追加到另一个jquery对象里：
+//
+// append方法：
+
+$("body").append($(".child"));
+},{}],"../../../../AppData/Local/Yarn/Data/global/node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -178,7 +188,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64303" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63225" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
@@ -353,5 +363,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["../../../../../AppData/Local/Yarn/Data/global/node_modules/parcel/src/builtins/hmr-runtime.js","main.js"], null)
+},{}]},{},["../../../../AppData/Local/Yarn/Data/global/node_modules/parcel/src/builtins/hmr-runtime.js","main.js"], null)
 //# sourceMappingURL=/main.1f19ae8e.js.map
